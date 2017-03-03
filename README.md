@@ -11,8 +11,8 @@ Sets up Devise, ActiveAdmin, Sidekiq
  - Postgres (although you could use another database, not tested with this)
 
 ## Usage
-`rails new PROJECT_NAME --template=template.rb --database=postgresql`
-`cd PROJECT_NAME`
-`foreman run Procfile.dev`
+ - `rails new PROJECT_NAME --template=template.rb --database=postgresql`
+ - `cd PROJECT_NAME`
+ - `foreman run Procfile.dev`
 
 That's it! You've got a running app with background processing and admin interface.
