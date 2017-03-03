@@ -5,35 +5,73 @@ gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
 gem 'activeadmin', '~> 1.0.0.pre4'
 gem 'inherited_resources', git: 'https://github.com/activeadmin/inherited_resources' #rails 5
+gem 'bootstrap-sass', '~> 3.3.6'
 
 run 'gem install mailcatcher'
 
-  # Procfiles
-  # Production
-  create_file 'Procfile' do <<-EOF
+run 'rails g controller home index'
+route "root to: 'home#index'"
+
+# HTML Template
+create_file './app/views/layouts/_alert.html.erb' do <<-EOF
+<% if notice %>
+  <p class="alert alert-info alert-dismissable">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <%= notice %>
+  </p>
+<% end %>
+<% if alert %>
+  <p class="alert alert-danger alert-dismissable">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <%= alert %>
+  </p>
+<% end %>
+EOF
+end
+
+create_file './app/views/layouts/_nav.html.erb', ''
+
+gsub_file './app/views/layouts/application.html.erb', '<%= yield %>' do <<-EOF
+<%= render "layouts/nav" %>
+
+    <div class="container">
+      <%= render "layouts/alerts" %>
+      <%= yield %>
+    </div>
+EOF
+end
+
+insert_into_file './app/views/layouts/application.html.erb', after: '<%= csrf_meta_tags %>' do <<-EOF
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+EOF
+end
+
+# Procfiles
+# Production
+create_file 'Procfile' do <<-EOF
 web: bundle exec puma -C ./config/puma.rb
 sidekiq: bundle exec sidekiq -C ./config/sidekiq.yml -r ./config/boot.rb
-  EOF
-  end
+EOF
+end
 
-  #Dev
-  create_file 'Procfile.dev' do <<-EOF
+#Dev
+create_file 'Procfile.dev' do <<-EOF
 web: bundle exec puma -C ./config/puma.rb
 sidekiq: bundle exec sidekiq -C ./config/sidekiq.yml -r ./config/boot.rb
 redis: redis-server
 mail: ruby -rbundler/setup -e "Bundler.clean_exec('mailcatcher', '--foreground')" 
-  EOF
-  end
+EOF
+end
 
-  # Sidekiq config
-  create_file './config/sidekiq.yml' do <<-EOF
+# Sidekiq config
+create_file './config/sidekiq.yml' do <<-EOF
 :concurrency: 15
 :queues:
-  - default
-  - [mailers, 2]
+- default
+- [mailers, 2]
 :dynamic: true
-  EOF
-  end
+EOF
+end
 
 after_bundle do
   # Devise (authentication)
