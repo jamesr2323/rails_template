@@ -6,6 +6,8 @@ gem 'sidekiq-unique-jobs'
 gem 'activeadmin', '~> 1.0.0.pre4'
 gem 'inherited_resources', git: 'https://github.com/activeadmin/inherited_resources' #rails 5
 gem 'bootstrap-sass', '~> 3.3.6'
+gem 'jquery-ui-rails', '~> 4.2.1' 
+gem 'puma'
 
 run 'gem install mailcatcher'
 
@@ -13,7 +15,7 @@ run 'rails g controller home index'
 route "root to: 'home#index'"
 
 # HTML Template
-create_file './app/views/layouts/_alert.html.erb' do <<-EOF
+create_file './app/views/layouts/_alerts.html.erb' do <<-EOF
 <% if notice %>
   <p class="alert alert-info alert-dismissable">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
