@@ -7,7 +7,7 @@ Sets up Devise, ActiveAdmin, Sidekiq
 ## Prerequisites
  - Ruby
  - Rails (tested using 5.0.1)
- - Redis (for Sidekiq) - `sudo apt-get install redis`
+ - Redis (for Sidekiq) - `sudo apt-get install redis-server`
  - Postgres (although you could use another database, not tested with this)
 
 ## Usage
