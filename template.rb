@@ -75,6 +75,25 @@ create_file './config/sidekiq.yml' do <<-EOF
 EOF
 end
 
+# Puma config
+create_file './config/puma.rb' do <<-EOF
+@env = ENV['RACK_ENV'] || 'development'
+
+@port = ENV['PORT'] || 5000
+
+workers Integer(ENV['WEB_CONCURRENCY'] || 2)
+threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 10)
+
+threads threads_count, threads_count
+
+preload_app!
+
+environment @env
+
+port @port
+EOF
+end
+
 after_bundle do
   # Devise (authentication)
   run "spring stop"
